@@ -1,0 +1,45 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    xmlns:five="http://namespaces.zope.org/five"
+    i18n_domain="collective.contentrules.mailtolocalrole">
+
+    <include package="plone.contentrules" />
+    <include package="plone.contentrules" file="meta.zcml" />
+
+	<utility
+        component=".vocabularies.LocalRolesVocabularyFactory"
+        name="collective.contentrules.mailtolocalrole.local_roles"
+        provides="zope.schema.interfaces.IVocabularyFactory" />
+
+    <!-- Email action definition -->
+
+     <adapter factory=".mail.MailActionExecutor" />
+
+     <browser:page
+       for="plone.app.contentrules.browser.interfaces.IRuleActionAdding"
+       name="plone.actions.MailLocalRole"
+       class=".mail.MailLocalRoleAddForm"
+       permission="cmf.ManagePortal"
+       />
+
+     <browser:page
+       for="collective.contentrules.mailtolocalrole.actions.mail.IMailLocalRoleAction"
+       name="edit"
+       class=".mail.MailLocalRoleEditForm"
+       permission="cmf.ManagePortal"
+       />
+
+     <plone:ruleAction
+         name="plone.actions.MailLocalRole"
+         title="Send email to users with local role"
+         description="Send an email on the triggering object"
+         for="*"
+         event="zope.component.interfaces.IObjectEvent"
+         addview="plone.actions.MailLocalRole"
+         editview="edit"
+         schema=".mail.IMailLocalRoleAction"
+         factory=".mail.MailLocalRoleAction"
+         />
+</configure>

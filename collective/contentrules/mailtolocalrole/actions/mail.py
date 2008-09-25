@@ -33,7 +33,10 @@ The action will look up the all Plone site users who explicitly have this local 
 role on the object and send a message to their email address."),
                                 vocabulary="collective.contentrules.mailtolocalrole.local_roles",
                                 required=True)
-                                
+    acquired = schema.Bool(title=_(u"Acquired Roles"),
+                                description=_("Should users that have this \
+role as an acquired role also receive this email?"),
+                                required=False)                              
     message = schema.Text(title=_plone(u"Message"),
                           description=_plone(u"Type in here the message that you \
 want to mail. Some defined content can be replaced: ${title} will be replaced \
@@ -51,7 +54,7 @@ class MailLocalRoleAction(SimpleItem):
     source = u''
     localrole = u''
     message = u''
-
+    acquired = True,
     element = 'plone.actions.MailLocalRole'
 
     @property
@@ -105,21 +108,29 @@ action or enter an email in the portal properties'
         local_roles = obj.get_local_roles()
         if len(local_roles) == 0:
             return True
-        recipients = []
+        recipients = set()
         for user, roles in local_roles:
             rolelist = list(roles)
             if self.element.localrole in rolelist:
                 recipient_prop = membertool.getMemberById(user).getProperty("email")
                 if recipient_prop != None:
-                    recipients.append(recipient_prop)
-                            
+                    recipients.add(recipient_prop)
+
+        # check for the acquired roles
+        if self.element.acquired:
+            sharing_page = obj.unrestrictedTraverse('@@sharing')             
+            acquired_roles = sharing_page._inherited_roles()
+            acquired_users = [r[0] for r in acquired_roles if self.element.localrole in r[1]]
+            recipients.update(acquired_users)
+
         message = self.element.message.replace("${url}", event_url)
         message = message.replace("${title}", event_title)
 
         subject = self.element.subject.replace("${url}", event_url)
         subject = subject.replace("${title}", event_title)
 
-        for recipient in recipients:
+
+        for recipient in recipients:    
             mailhost.secureSend(message, recipient, source,
                                 subject=subject, subtype='plain',
                                 charset=email_charset, debug=False,

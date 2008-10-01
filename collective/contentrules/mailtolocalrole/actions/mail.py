@@ -112,9 +112,7 @@ action or enter an email in the portal properties'
         for user, roles in local_roles:
             rolelist = list(roles)
             if self.element.localrole in rolelist:
-                recipient_prop = membertool.getMemberById(user).getProperty("email")
-                if recipient_prop != None:
-                    recipients.add(recipient_prop)
+                recipients.add(user)
 
         # check for the acquired roles
         if self.element.acquired:
@@ -123,14 +121,21 @@ action or enter an email in the portal properties'
             acquired_users = [r[0] for r in acquired_roles if self.element.localrole in r[1]]
             recipients.update(acquired_users)
 
+        # look up e-mail addresses for the found users
+        recipients_mail = set()
+        for user in recipients:
+            recipient_prop = membertool.getMemberById(user).getProperty("email")
+            if recipient_prop != None:
+                recipients_mail.add(recipient_prop)
+
         message = self.element.message.replace("${url}", event_url)
         message = message.replace("${title}", event_title)
-
+            
         subject = self.element.subject.replace("${url}", event_url)
         subject = subject.replace("${title}", event_title)
 
 
-        for recipient in recipients:    
+        for recipient in recipients_mail:    
             mailhost.secureSend(message, recipient, source,
                                 subject=subject, subtype='plain',
                                 charset=email_charset, debug=False,

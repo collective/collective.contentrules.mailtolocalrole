@@ -1,4 +1,10 @@
 0.5 unreleased
 --------------
 
-Import basic version from a client project
+- Add locales [fredvd]
+
+- Fix acquired roles checking & look up email addresses [fredvd]
+
+- Add checking for acquired roles [fredvd]
+
+- Import basic version from a client project [fredvd]

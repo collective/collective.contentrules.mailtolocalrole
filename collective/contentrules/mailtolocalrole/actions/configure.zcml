@@ -33,7 +33,7 @@
 
      <plone:ruleAction
          name="plone.actions.MailLocalRole"
-         title="Send email to users with local role"
+         title="Send email to users with a local role"
          description="Send an email on the triggering object"
          for="*"
          event="zope.component.interfaces.IObjectEvent"

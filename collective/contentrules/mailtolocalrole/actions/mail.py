@@ -55,7 +55,7 @@ class MailLocalRoleAction(SimpleItem):
     source = u''
     localrole = u''
     message = u''
-    acquired = False,
+    acquired = False
     element = 'plone.actions.MailLocalRole'
 
     @property

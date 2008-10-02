@@ -16,7 +16,7 @@ from Products.SecureMailHost.SecureMailHost import SecureMailHost
 
 from Products.PloneTestCase.setup import default_user
 
-# test copied from plone.app.contentrules test_action_mail.py
+# basic test structure copied from plone.app.contentrules test_action_mail.py
 
 class DummyEvent(object):
     implements(IObjectEvent)

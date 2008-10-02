@@ -10,6 +10,7 @@ from plone.app.contentrules.browser.formhelper import AddForm, EditForm
 from plone.contentrules.rule.interfaces import IRuleElementData, IExecutable
 
 from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone.utils import safe_unicode
 
 # import the default messagefactory as _plone. These strings will not be put in
 # the locales .po file by i18ndude
@@ -54,7 +55,7 @@ class MailLocalRoleAction(SimpleItem):
     source = u''
     localrole = u''
     message = u''
-    acquired = True,
+    acquired = False,
     element = 'plone.actions.MailLocalRole'
 
     @property
@@ -99,7 +100,7 @@ action or enter an email in the portal properties'
             source = "%s <%s>" % (from_name, from_address)
 
         obj = self.event.object
-        event_title = obj.Title()
+        event_title = safe_unicode(obj.Title())
         event_url = obj.absolute_url()
 
 
@@ -130,7 +131,7 @@ action or enter an email in the portal properties'
 
         message = self.element.message.replace("${url}", event_url)
         message = message.replace("${title}", event_title)
-            
+
         subject = self.element.subject.replace("${url}", event_url)
         subject = subject.replace("${title}", event_title)
 

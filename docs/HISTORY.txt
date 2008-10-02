@@ -1,8 +1,0 @@
-Changelog
-=========
-
-0.8 - Unreleased
-----------------
-
-* Initial release
-

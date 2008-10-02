@@ -1,3 +1,9 @@
+0.6 2008-10-02
+--------------
+
+- Fixed and added tests [fredvd]
+
+
 0.5 unreleased
 --------------
 

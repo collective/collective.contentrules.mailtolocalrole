@@ -1,0 +1,39 @@
+# --- PLEASE EDIT THE LINES BELOW CORRECTLY ---
+# SOME DESCRIPTIVE TITLE.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2008-10-02 10:43+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"Language-Code: en\n"
+"Language-Name: English\n"
+"Preferred-Encodings: utf-8 latin1\n"
+"Domain: collective.contentrules.mailtolocalrole\n"
+
+#: ./actions/mail.py:37
+msgid "Acquired Roles"
+msgstr ""
+
+#: ./actions/mail.py:63
+msgid "Email report to users with local role ${localrole} on the object"
+msgstr ""
+
+#: ./actions/mail.py:31
+msgid "Local Role"
+msgstr ""
+
+#: ./actions/mail.py:32
+msgid "Select a local role. The action will look up the all Plone site users who explicitly have this local role on the object and send a message to their email address."
+msgstr ""
+
+#: ./actions/mail.py:38
+msgid "Should users that have this role as an acquired role also receive this email?"
+msgstr ""
+

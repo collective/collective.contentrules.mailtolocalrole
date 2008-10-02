@@ -1,7 +1,6 @@
 Introduction
 ============
 
-
 Using content rules in Plone 3 it's very easy to register for certain events
 and perform actions upon occurrence. One of these actions provided by Plone 3
 is a mail action. 
@@ -33,6 +32,12 @@ Usage
 Go to the Plone Control Panel, select Content Rules and add a new Rule. 
 Under 'actions' you now have a new option: Send email to users with local role.
 
+Stability / feedback
+====================
+
+this stand alone package has been derived from an implentation done during
+a customer project. It's in production use, there are some tests, but it's
+not 1.0 yet. Feedback is appreciated.
 
 Credits
 =======

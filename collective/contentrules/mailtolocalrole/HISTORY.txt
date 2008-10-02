@@ -3,6 +3,7 @@
 
 - Fixed and added tests [fredvd]
 
+- Updated locales [fredvd]
 
 0.5 unreleased
 --------------

@@ -122,11 +122,27 @@ action or enter an email in the portal properties'
             acquired_users = [r[0] for r in acquired_roles if self.element.localrole in r[1]]
             recipients.update(acquired_users)
 
+        # check to see if the recipents are users or groups
+        group_recipients = []
+        new_recipients = []
+        group_tool = portal.portal_groups
+        for recipient in recipients:
+            group = group_tool.getGroupById(recipient)
+            if group is not None:
+                group_recipients.append(recipient)
+                [new_recipients.append(user_id) for user_id in group.getGroupMemberIds()]
+
+        for recipient in group_recipients:
+            recipients.remove(recipient)
+
+        for recipient in new_recipients:
+            recipients.add(recipient)
+
         # look up e-mail addresses for the found users
         recipients_mail = set()
         for user in recipients:
             recipient_prop = membertool.getMemberById(user).getProperty("email")
-            if recipient_prop != None:
+            if recipient_prop != None and len(recipient_prop)>1:
                 recipients_mail.add(recipient_prop)
 
         message = self.element.message.replace("${url}", event_url)
@@ -136,7 +152,7 @@ action or enter an email in the portal properties'
         subject = subject.replace("${title}", event_title)
 
 
-        for recipient in recipients_mail:    
+        for recipient in recipients_mail:  
             mailhost.secureSend(message, recipient, source,
                                 subject=subject, subtype='plain',
                                 charset=email_charset, debug=False,

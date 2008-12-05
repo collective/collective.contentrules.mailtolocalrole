@@ -5,6 +5,11 @@
 
 - Added Owner to role's vocabulary [paulox]
 
+- Add check for empty user email address [fredvd]
+
+- If the localrole is added to a group, add all members of that group to
+  the recipients list [Craig Swank]
+
 0.6 2008-10-02
 --------------
 

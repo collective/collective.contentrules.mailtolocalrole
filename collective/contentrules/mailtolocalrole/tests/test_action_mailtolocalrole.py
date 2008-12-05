@@ -16,6 +16,8 @@ from Products.SecureMailHost.SecureMailHost import SecureMailHost
 
 from Products.PloneTestCase.setup import default_user
 
+from Products.CMFCore.utils import getToolByName
+
 # basic test structure copied from plone.app.contentrules test_action_mail.py
 
 class DummyEvent(object):
@@ -45,6 +47,27 @@ class TestMailAction(ContentRulesTestCase):
         member.setMemberProperties(dict(email="getme@frommember.com"))
         member = self.portal.portal_membership.getMemberById('portal_owner')
         member.setMemberProperties(dict(email="portal@owner.com"))
+
+        # set up a group
+        membership = getToolByName(self.portal, 'portal_membership')
+        membership.addMember(
+            'member1',
+            'secret',
+            ('Member',),
+            (),
+            properties={'email':'somedude@url.com'})
+        membership.addMember(
+            'member2',
+            'secret',
+            ('Member',),
+            (),
+            properties={'email':'anotherdude@url.com'})
+        membership.addMember('member3', 'secret', ('Member',), ())
+        groups = getToolByName(self.portal, 'portal_groups')
+        groups.addGroup('group1')
+        groups.addPrincipalToGroup('member2', 'group1')
+        self.folder.manage_setLocalRoles('member1', ['Reader',])
+        self.folder.manage_setLocalRoles('group1', ['Reader',])
         
     def testRegistered(self):
         element = getUtility(IRuleAction, name='plone.actions.MailLocalRole')
@@ -109,6 +132,26 @@ class TestMailAction(ContentRulesTestCase):
         self.assertEqual("P\xc3\xa4ge 'W\xc3\xa4lkommen' created in \
 http://nohost/plone/Members/test_user_1_/d1 !",
                          mailSent.get_payload(decode=True))
+
+    def testExecuteWithGroup(self):
+        self.loginAsPortalOwner()
+        sm = getSiteManager(self.portal)
+        sm.unregisterUtility(provided=IMailHost)
+        dummyMailHost = DummySecureMailHost('dMailhost')
+        sm.registerUtility(dummyMailHost, IMailHost)
+        e = MailLocalRoleAction()
+        e.source = "foo@bar.be"
+        e.localrole = "Reader"
+        e.acquired = True
+        e.message = u"P√§ge '${title}' created in ${url} !"
+        ex = getMultiAdapter((self.folder, e, DummyEvent(self.folder.d1)),
+                             IExecutable)
+        ex()
+        self.failUnless(isinstance(dummyMailHost.sent[0], MIMEText))
+        self.assertEqual(len(dummyMailHost.sent), 2)
+        mailSentTo = [mailSent.get('To') for mailSent in dummyMailHost.sent]
+        assert("somedude@url.com" in mailSentTo)
+        assert("anotherdude@url.com" in mailSentTo)
 
     def testExecuteAcquired(self):
         self.loginAsPortalOwner()

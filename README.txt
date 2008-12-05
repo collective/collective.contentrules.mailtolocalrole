@@ -39,10 +39,13 @@ this stand alone package has been derived from an implentation done during
 a customer project. It's in production use, there are some tests, but it's
 not 1.0 yet. Feedback is appreciated.
 
+0.7 update: Several users have commented and sent feedback/patches. Thank you!
+
+
 Caveat
 ======
 
-This contentrule only works on *local* roles. If you check for the review role
+This contentrule only works on **local** roles. If you check for the review role
 and you have a user a or a group in your user settings defined as a reviewer
 as a global role, these will *NOT* be picked up. 
 

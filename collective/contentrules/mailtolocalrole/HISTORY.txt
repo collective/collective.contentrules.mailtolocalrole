@@ -1,3 +1,10 @@
+0.7 unreleased
+--------------
+
+- Added Italian localization [paulox]
+
+- Added Owner to role's vocabulary [paulox]
+
 0.6 2008-10-02
 --------------
 

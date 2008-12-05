@@ -1,0 +1,38 @@
+# Paolo Melchiorre <paolo@melchiorre.org>, 2008.
+
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2008-10-02 10:46+0000\n"
+"PO-Revision-Date: 2008-11-17 18:31+0100\n"
+"Last-Translator: Paolo Melchiorre <paolo@melchiorre.org>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"Language-Code: it\n"
+"Language-Name: Italian\n"
+"Preferred-Encodings: utf-8 latin1\n"
+"Domain: DOMAIN\n"
+
+#: ./actions/mail.py:37
+msgid "Acquired Roles"
+msgstr "Ruoli acquisiti"
+
+#: ./actions/mail.py:63
+msgid "Email report to users with local role ${localrole} on the object"
+msgstr "Email all'utente con ruolo locale ${localrole} sull'oggetto"
+
+#: ./actions/mail.py:31
+msgid "Local Role"
+msgstr "Ruolo locale"
+
+#: ./actions/mail.py:32
+msgid "Select a local role. The action will look up the all Plone site users who explicitly have this local role on the object and send a message to their email address."
+msgstr "Seleziona un ruolo locale. L'azione controlla tutti gli utenti del portale Plone che hanno questo ruolo locale sull'oggetto ed invia un messaggio al loro indirizzo email."
+
+#: ./actions/mail.py:38
+msgid "Should users that have this role as an acquired role also receive this email?"
+msgstr "Anche gli utenti che hanno questo ruolo come ruolo acquisito dovranno ricevere questa email?"
+

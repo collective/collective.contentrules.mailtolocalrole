@@ -142,7 +142,7 @@ action or enter an email in the portal properties'
         recipients_mail = set()
         for user in recipients:
             recipient_prop = membertool.getMemberById(user).getProperty("email")
-            if recipient_prop != None and len(recipient_prop)>1:
+            if recipient_prop != None and len(recipient_prop)>0:
                 recipients_mail.add(recipient_prop)
 
         message = self.element.message.replace("${url}", event_url)

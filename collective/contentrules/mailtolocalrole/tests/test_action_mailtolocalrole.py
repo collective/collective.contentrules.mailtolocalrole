@@ -69,6 +69,17 @@ class TestMailAction(ContentRulesTestCase):
         self.folder.manage_setLocalRoles('member1', ['Reader',])
         self.folder.manage_setLocalRoles('group1', ['Reader',])
         
+        # empty email address
+        membership.addMember(
+            'membernomail',
+            'secret',
+            ('Member',),
+            (),
+            properties={'email':''})
+        self.folder.invokeFactory('Document', 'd2',
+            title=unicode('Wälkommen också', 'utf-8'))
+        self.folder.d2.manage_setLocalRoles('membernomail', ['Reviewer',])
+        
     def testRegistered(self):
         element = getUtility(IRuleAction, name='plone.actions.MailLocalRole')
         self.assertEquals('plone.actions.MailLocalRole', element.addview)
@@ -152,6 +163,22 @@ http://nohost/plone/Members/test_user_1_/d1 !",
         mailSentTo = [mailSent.get('To') for mailSent in dummyMailHost.sent]
         assert("somedude@url.com" in mailSentTo)
         assert("anotherdude@url.com" in mailSentTo)
+
+    def testExecuteNoEmptyMail(self):
+        self.loginAsPortalOwner()
+        sm = getSiteManager(self.portal)
+        sm.unregisterUtility(provided=IMailHost)
+        dummyMailHost = DummySecureMailHost('dMailhost')
+        sm.registerUtility(dummyMailHost, IMailHost)
+        e = MailLocalRoleAction()
+        e.source = "foo@bar.be"
+        e.localrole = "Reviewer"
+        e.acquired = False
+        e.message = u"Päge '${title}' created in ${url} !"
+        ex = getMultiAdapter((self.folder, e, DummyEvent(self.folder.d2)),
+                             IExecutable)
+        ex()
+        self.assertEqual(len(dummyMailHost.sent),0)                         
 
     def testExecuteAcquired(self):
         self.loginAsPortalOwner()

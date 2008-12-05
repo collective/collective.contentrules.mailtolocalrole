@@ -1,0 +1,6 @@
+TODO
+
+- maybe expand the package to check for global roles as well, but it would
+  be more logical to also rename the package to
+  collective.contentrules.mailtorole ...
+  

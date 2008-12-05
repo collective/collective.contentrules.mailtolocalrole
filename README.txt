@@ -39,6 +39,32 @@ this stand alone package has been derived from an implentation done during
 a customer project. It's in production use, there are some tests, but it's
 not 1.0 yet. Feedback is appreciated.
 
+Caveat
+======
+
+This contentrule only works on *local* roles. If you check for the review role
+and you have a user a or a group in your user settings defined as a reviewer
+as a global role, these will *NOT* be picked up. 
+
+Also, if you assign users a global review role, you cannot assign them a 
+local role anymore because the Sharing tab will show an inherited sign
+instead of a checkbox.
+
+Worse: if you first assign a user/group a local role and
+afterwards also give him a global role in the user settings in the Plone
+Control Panel, the local role will be hidden in the sharing tab of the content
+you've set the local role to, but will still be active in the background. The
+sharing tab won't even show you the global role unless you explicitly search
+for the user (which is logical, otherwise every sharing tab woul be spammed
+with global roles). But when you remove the global role the local role will
+show up again.
+
+
+This package was first designed for a use case with local roles, I hadn't
+really thought of checking for global roles as well. We could add this feature
+in a future version if there is demand for it, but we would have to change the
+package name, collective.contentrules.mailtorole... ;-)
+
 Credits
 =======
 

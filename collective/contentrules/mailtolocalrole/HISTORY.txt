@@ -1,4 +1,4 @@
-0.7 unreleased
+0.7 2008-12-05 (Sinterklaas!)
 --------------
 
 - Added Italian localization [paulox]

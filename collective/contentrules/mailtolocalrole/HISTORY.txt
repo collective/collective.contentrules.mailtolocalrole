@@ -1,4 +1,4 @@
-0.8 (unreleased)
+1.0 (2010-12-04)
 ----------------
 
 - Fixed error when used on Plone 4: passing 'From' to secureSend is

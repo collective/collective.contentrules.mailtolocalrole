@@ -68,7 +68,7 @@ class TestMailAction(ContentRulesTestCase):
         groups.addPrincipalToGroup('member2', 'group1')
         self.folder.manage_setLocalRoles('member1', ['Reader',])
         self.folder.manage_setLocalRoles('group1', ['Reader',])
-        
+
         # empty email address
         membership.addMember(
             'membernomail',
@@ -79,7 +79,7 @@ class TestMailAction(ContentRulesTestCase):
         self.folder.invokeFactory('Document', 'd2',
             title=unicode('Wälkommen också', 'utf-8'))
         self.folder.d2.manage_setLocalRoles('membernomail', ['Reviewer',])
-        
+
     def testRegistered(self):
         element = getUtility(IRuleAction, name='plone.actions.MailLocalRole')
         self.assertEquals('plone.actions.MailLocalRole', element.addview)
@@ -178,7 +178,7 @@ http://nohost/plone/Members/test_user_1_/d1 !",
         ex = getMultiAdapter((self.folder, e, DummyEvent(self.folder.d2)),
                              IExecutable)
         ex()
-        self.assertEqual(len(dummyMailHost.sent),0)                         
+        self.assertEqual(len(dummyMailHost.sent),0)
 
     def testExecuteAcquired(self):
         self.loginAsPortalOwner()
@@ -196,7 +196,7 @@ http://nohost/plone/Members/test_user_1_/d1 !",
         ex()
         self.failUnless(isinstance(dummyMailHost.sent[0], MIMEText))
         self.failUnless(isinstance(dummyMailHost.sent[1], MIMEText))
-        
+
         for mailSent in dummyMailHost.sent:
 
             self.assertEqual('text/plain; charset="utf-8"',

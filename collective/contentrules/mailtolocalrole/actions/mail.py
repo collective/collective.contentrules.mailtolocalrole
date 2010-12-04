@@ -6,7 +6,7 @@ from zope.interface import Interface, implements
 from zope.formlib import form
 from zope import schema
 
-from plone.app.contentrules.browser.formhelper import AddForm, EditForm 
+from plone.app.contentrules.browser.formhelper import AddForm, EditForm
 from plone.contentrules.rule.interfaces import IRuleElementData, IExecutable
 
 from Products.CMFCore.utils import getToolByName
@@ -37,7 +37,7 @@ role on the object and send a message to their email address."),
     acquired = schema.Bool(title=_(u"Acquired Roles"),
                                 description=_("Should users that have this \
 role as an acquired role also receive this email?"),
-                                required=False)                              
+                                required=False)
     message = schema.Text(title=_plone(u"Message"),
                           description=_plone(u"Type in here the message that you \
 want to mail. Some defined content can be replaced: ${title} will be replaced \
@@ -117,7 +117,7 @@ action or enter an email in the portal properties'
 
         # check for the acquired roles
         if self.element.acquired:
-            sharing_page = obj.unrestrictedTraverse('@@sharing')             
+            sharing_page = obj.unrestrictedTraverse('@@sharing')
             acquired_roles = sharing_page._inherited_roles()
             acquired_users = [r[0] for r in acquired_roles if self.element.localrole in r[1]]
             recipients.update(acquired_users)
@@ -152,7 +152,7 @@ action or enter an email in the portal properties'
         subject = subject.replace("${title}", event_title)
 
 
-        for recipient in recipients_mail:  
+        for recipient in recipients_mail:
             mailhost.secureSend(message, recipient, source,
                                 subject=subject, subtype='plain',
                                 charset=email_charset, debug=False)

@@ -1,12 +1,12 @@
-0.8 unreleased
---------------
+0.8 (unreleased)
+----------------
 
 - Fixed error when used on Plone 4: passing 'From' to secureSend is
   not needed in Plone 3 and breaks in Plone 4.
   [maurits]
 
 
-0.7 2008-12-05 (Sinterklaas)
+0.7 (2008-12-05 Sinterklaas)
 ----------------------------
 
 - Added Italian localization [paulox]
@@ -18,12 +18,14 @@
 - If the localrole is added to a group, add all members of that group to
   the recipients list [Craig Swank]
 
-0.6 2008-10-02
---------------
+
+0.6 (2008-10-02)
+----------------
 
 - Fixed and added tests [fredvd]
 
 - Updated locales [fredvd]
+
 
 0.5 unreleased
 --------------

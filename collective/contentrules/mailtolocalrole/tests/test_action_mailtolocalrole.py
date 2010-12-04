@@ -1,4 +1,4 @@
-# -*- coding: UTF-8 -*-
+# -*- coding: utf-8 -*-
 
 from email.MIMEText import MIMEText
 from zope.component import getUtility, getMultiAdapter, getSiteManager
@@ -7,7 +7,8 @@ from zope.interface import implements
 
 from plone.app.contentrules.rule import Rule
 from plone.app.contentrules.tests.base import ContentRulesTestCase
-from collective.contentrules.mailtolocalrole.actions.mail import MailLocalRoleAction, MailLocalRoleEditForm, MailLocalRoleAddForm
+from collective.contentrules.mailtolocalrole.actions.mail import (
+    MailLocalRoleAction, MailLocalRoleEditForm, MailLocalRoleAddForm)
 from plone.contentrules.engine.interfaces import IRuleStorage
 from plone.contentrules.rule.interfaces import IRuleAction, IExecutable
 
@@ -20,20 +21,24 @@ from Products.CMFCore.utils import getToolByName
 
 # basic test structure copied from plone.app.contentrules test_action_mail.py
 
+
 class DummyEvent(object):
     implements(IObjectEvent)
 
     def __init__(self, object):
         self.object = object
 
+
 class DummySecureMailHost(SecureMailHost):
     meta_type = 'Dummy secure Mail Host'
+
     def __init__(self, id):
         self.id = id
         self.sent = []
 
     def _send(self, mfrom, mto, messageText, debug=False):
         self.sent.append(messageText)
+
 
 class TestMailAction(ContentRulesTestCase):
 
@@ -55,19 +60,19 @@ class TestMailAction(ContentRulesTestCase):
             'secret',
             ('Member',),
             (),
-            properties={'email':'somedude@url.com'})
+            properties={'email': 'somedude@url.com'})
         membership.addMember(
             'member2',
             'secret',
             ('Member',),
             (),
-            properties={'email':'anotherdude@url.com'})
-        membership.addMember('member3', 'secret', ('Member',), ())
+            properties={'email': 'anotherdude@url.com'})
+        membership.addMember('member3', 'secret', ('Member', ), ())
         groups = getToolByName(self.portal, 'portal_groups')
         groups.addGroup('group1')
         groups.addPrincipalToGroup('member2', 'group1')
-        self.folder.manage_setLocalRoles('member1', ['Reader',])
-        self.folder.manage_setLocalRoles('group1', ['Reader',])
+        self.folder.manage_setLocalRoles('member1', ['Reader', ])
+        self.folder.manage_setLocalRoles('group1', ['Reader', ])
 
         # empty email address
         membership.addMember(
@@ -75,10 +80,10 @@ class TestMailAction(ContentRulesTestCase):
             'secret',
             ('Member',),
             (),
-            properties={'email':''})
+            properties={'email': ''})
         self.folder.invokeFactory('Document', 'd2',
             title=unicode('Wälkommen också', 'utf-8'))
-        self.folder.d2.manage_setLocalRoles('membernomail', ['Reviewer',])
+        self.folder.d2.manage_setLocalRoles('membernomail', ['Reviewer', ])
 
     def testRegistered(self):
         element = getUtility(IRuleAction, name='plone.actions.MailLocalRole')
@@ -96,12 +101,12 @@ class TestMailAction(ContentRulesTestCase):
         adding = getMultiAdapter((rule, self.portal.REQUEST), name='+action')
         addview = getMultiAdapter((adding, self.portal.REQUEST),
                                   name=element.addview)
-        self.failUnless(isinstance(addview,MailLocalRoleAddForm))
+        self.failUnless(isinstance(addview, MailLocalRoleAddForm))
 
-        addview.createAndAdd(data={'subject' : 'My Subject',
+        addview.createAndAdd(data={'subject': 'My Subject',
                                    'source': 'foo@bar.be',
-                                   'localrole' : 'Owner',
-                                   'acquired' : True,
+                                   'localrole': 'Owner',
+                                   'acquired': True,
                                    'message': 'Hey, Oh!'})
 
         e = rule.actions[0]
@@ -178,7 +183,7 @@ http://nohost/plone/Members/test_user_1_/d1 !",
         ex = getMultiAdapter((self.folder, e, DummyEvent(self.folder.d2)),
                              IExecutable)
         ex()
-        self.assertEqual(len(dummyMailHost.sent),0)
+        self.assertEqual(len(dummyMailHost.sent), 0)
 
     def testExecuteAcquired(self):
         self.loginAsPortalOwner()
@@ -208,7 +213,6 @@ http://nohost/plone/Members/test_user_1_/d1 !",
             self.assertEqual("P\xc3\xa4ge 'W\xc3\xa4lkommen' created in http://nohost/plone/Members/test_user_1_/d1 !",
                              mailSent.get_payload(decode=True))
 
-
     def testExecuteNoSource(self):
         self.loginAsPortalOwner()
         sm = getSiteManager(self.portal)
@@ -234,7 +238,6 @@ http://nohost/plone/Members/test_user_1_/d1 !",
                          mailSent.get('From'))
         self.assertEqual("Document created !",
                          mailSent.get_payload(decode=True))
-
 
 
 def test_suite():

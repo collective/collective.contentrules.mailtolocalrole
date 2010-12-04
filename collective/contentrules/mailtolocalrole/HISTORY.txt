@@ -1,7 +1,9 @@
 0.8 unreleased
 --------------
 
-- 
+- Fixed error when used on Plone 4: passing 'From' to secureSend is
+  not needed in Plone 3 and breaks in Plone 4.
+  [maurits]
 
 
 0.7 2008-12-05 (Sinterklaas)

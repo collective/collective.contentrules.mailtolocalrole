@@ -155,8 +155,7 @@ action or enter an email in the portal properties'
         for recipient in recipients_mail:  
             mailhost.secureSend(message, recipient, source,
                                 subject=subject, subtype='plain',
-                                charset=email_charset, debug=False,
-                                From=source)
+                                charset=email_charset, debug=False)
         return True
 
 class MailLocalRoleAddForm(AddForm):

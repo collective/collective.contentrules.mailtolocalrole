@@ -16,8 +16,27 @@ from Products.MailHost.interfaces import IMailHost
 from Products.SecureMailHost.SecureMailHost import SecureMailHost
 
 from Products.PloneTestCase.setup import default_user
+from Products.PloneTestCase.layer import onsetup
+from Products.Five import zcml
+from Products.Five import fiveconfigure
 
 from Products.CMFCore.utils import getToolByName
+
+@onsetup
+def setup_product():
+    """Set up the package and its dependencies.
+    
+    The @onsetup decorator causes the execution of this body to be deferred
+    until the setup of the Plone site testing layer. We could have created our
+    own layer, but this is the easiest way for Plone integration tests.
+    """
+        
+    fiveconfigure.debug_mode = True
+    import collective.contentrules.mailtolocalrole
+    zcml.load_config('configure.zcml', collective.contentrules.mailtolocalrole)
+    fiveconfigure.debug_mode = False
+
+setup_product()
 
 # basic test structure copied from plone.app.contentrules test_action_mail.py
 
@@ -168,6 +187,76 @@ http://nohost/plone/Members/test_user_1_/d1 !",
         mailSentTo = [mailSent.get('To') for mailSent in dummyMailHost.sent]
         assert("somedude@url.com" in mailSentTo)
         assert("anotherdude@url.com" in mailSentTo)
+    
+    def testExecuteWithSubGroup(self):
+        self.loginAsPortalOwner()
+        membership = getToolByName(self.portal, 'portal_membership')
+        groups = getToolByName(self.portal, 'portal_groups')
+        
+        # set up additional group and its subgroups
+        groups.addGroup('group2')
+        groups.addGroup('subgroup1')
+        groups.addGroup('subgroup2')
+        
+        # put subgroup1 into group2
+        groups.addPrincipalToGroup('subgroup1', 'group2')
+        
+        # put subgroup2 into subgroup1
+        groups.addPrincipalToGroup('subgroup2', 'subgroup1')
+        
+        # put submember1 into group2
+        membership.addMember(
+            'submember1',
+            'secret',
+            ('Member',),
+            (),
+            properties={'email': 'submember1@url.com'})
+        groups.addPrincipalToGroup('submember1', 'group2')
+        
+        # put submember2 into subgroup1
+        membership.addMember(
+            'submember2',
+            'secret',
+            ('Member',),
+            (),
+            properties={'email': 'submember2@url.com'})
+        groups.addPrincipalToGroup('submember2', 'subgroup1')
+        
+        # put submember3 into subgroup2
+        membership.addMember(
+            'submember3',
+            'secret',
+            ('Member',),
+            (),
+            properties={'email': 'submember3@url.com'})
+        groups.addPrincipalToGroup('submember3', 'subgroup2')
+        
+        # create new folder and document in it
+        self.portal.invokeFactory('Folder', 'test_subgroups', title=u'Test subgroups')
+        test_folder = self.portal['test_subgroups']
+        test_folder.invokeFactory('Document', 'subgroups_page', title=u'Subgroups page')
+        
+        # assign Reader role to group2 which containes several subgroups and members in several levels
+        test_folder.manage_setLocalRoles('group2', ['Reader', ])
+        
+        sm = getSiteManager(self.portal)
+        sm.unregisterUtility(provided=IMailHost)
+        dummyMailHost = DummySecureMailHost('dMailhost')
+        sm.registerUtility(dummyMailHost, IMailHost)
+        e = MailLocalRoleAction()
+        e.source = "foo@bar.be"
+        e.localrole = "Reader"
+        e.acquired = True
+        e.message = u"P√§ge '${title}' created in ${url} !"
+        ex = getMultiAdapter((test_folder, e, DummyEvent(test_folder.subgroups_page)),
+                             IExecutable)
+        ex()
+        self.failUnless(isinstance(dummyMailHost.sent[0], MIMEText))
+        self.assertEqual(len(dummyMailHost.sent), 3)
+        mailSentTo = [mailSent.get('To') for mailSent in dummyMailHost.sent]
+        assert("submember1@url.com" in mailSentTo)
+        assert("submember2@url.com" in mailSentTo)
+        assert("submember3@url.com" in mailSentTo)
 
     def testExecuteNoEmptyMail(self):
         self.loginAsPortalOwner()
@@ -234,6 +323,7 @@ http://nohost/plone/Members/test_user_1_/d1 !",
         self.assertEqual('text/plain; charset="utf-8"',
                         mailSent.get('Content-Type'))
         self.assertEqual("getme@frommember.com", mailSent.get('To'))
+        # FIXME: AssertionError: 'Site Administrator <manager@portal.be>' != '=?utf-8?q?_?=<manager@portal.be>'
         self.assertEqual("Site Administrator <manager@portal.be>",
                          mailSent.get('From'))
         self.assertEqual("Document created !",

@@ -173,7 +173,7 @@ action or enter an email in the portal properties")
         subject = subject.replace("${title}", event_title)
 
         for recipient in recipients_mail:
-            mailhost.secureSend(message, recipient, source,
+            mailhost.secureSend(message.encode(email_charset), recipient, source,
                                 subject=subject, subtype='plain',
                                 charset=email_charset, debug=False)
         return True

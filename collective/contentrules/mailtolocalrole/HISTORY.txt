@@ -1,8 +1,13 @@
 1.1 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Fix the email from header that is generated from the portal owner if no from
+  address is specified. Backported from plone.app.contentrules 4.0.2
+  [fredvd]
 
+- Add subgroups support. If a group contains a subgroup that has members,
+  these members will also be checked for having the local role.
+  [lzdych]
 
 1.0 (2010-12-04)
 ----------------

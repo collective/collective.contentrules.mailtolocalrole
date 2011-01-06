@@ -102,8 +102,8 @@ class MailActionExecutor(object):
             if not from_address:
                 raise ValueError("You must provide a source address for this \
 action or enter an email in the portal properties")
-            from_name = portal.getProperty('email_from_name')
-            source = "%s <%s>" % (from_name, from_address)
+            from_name = portal.getProperty('email_from_name').strip('"')
+            source = '"%s" <%s>' % (from_name, from_address)
 
         obj = self.event.object
         event_title = safe_unicode(obj.Title())

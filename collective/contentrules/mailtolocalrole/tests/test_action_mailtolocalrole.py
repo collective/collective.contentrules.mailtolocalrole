@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from email.MIMEText import MIMEText
+
 from zope.component import getUtility, getMultiAdapter, getSiteManager
 from zope.component.interfaces import IObjectEvent
 from zope.interface import implements
@@ -316,16 +317,16 @@ http://nohost/plone/Members/test_user_1_/d1 !",
                              IExecutable)
         self.assertRaises(ValueError, ex)
         # if we provide a site mail address this won't fail anymore
-        sm.manage_changeProperties({'email_from_address': 'manager@portal.be'})
+        sm.manage_changeProperties({'email_from_address': 'manager@portal.be', 'email_from_name':'ploneRulez'})
         ex()
         self.failUnless(isinstance(dummyMailHost.sent[0], MIMEText))
         mailSent = dummyMailHost.sent[0]
         self.assertEqual('text/plain; charset="utf-8"',
                         mailSent.get('Content-Type'))
         self.assertEqual("getme@frommember.com", mailSent.get('To'))
-        # FIXME: AssertionError: 'Site Administrator <manager@portal.be>' != '=?utf-8?q?_?=<manager@portal.be>'
-        self.assertEqual("Site Administrator <manager@portal.be>",
-                         mailSent.get('From'))
+        assert("<manager@portal.be>" in mailSent.get('From'))
+        assert("ploneRulez" in mailSent.get('From'))
+
         self.assertEqual("Document created !",
                          mailSent.get_payload(decode=True))
 

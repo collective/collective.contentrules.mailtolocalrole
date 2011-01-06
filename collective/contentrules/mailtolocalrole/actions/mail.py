@@ -71,7 +71,6 @@ class MailLocalRoleAction(SimpleItem):
                   u"the object"),
                  mapping=dict(localrole=self.localrole))
 
-
 class MailActionExecutor(object):
     """The executor for this action.
     """
@@ -103,8 +102,8 @@ class MailActionExecutor(object):
             if not from_address:
                 raise ValueError("You must provide a source address for this \
 action or enter an email in the portal properties")
-            from_name = portal.getProperty('email_from_name')
-            source = "%s <%s>" % (from_name, from_address)
+            from_name = portal.getProperty('email_from_name').strip('"')
+            source = '"%s" <%s>' % (from_name, from_address)
 
         obj = self.event.object
         event_title = safe_unicode(obj.Title())
@@ -134,13 +133,25 @@ action or enter an email in the portal properties")
         group_recipients = []
         new_recipients = []
         group_tool = portal.portal_groups
+        
+        def _getGroupMemberIds(group):
+            """ Helper method to support groups in groups. """
+            members = []
+            for member_id in group.getGroupMemberIds():
+                subgroup = group_tool.getGroupById(member_id)
+                if subgroup is not None:
+                    members.extend(_getGroupMemberIds(subgroup))
+                else:
+                    members.append(member_id)
+            return members
+
         for recipient in recipients:
             group = group_tool.getGroupById(recipient)
             if group is not None:
-                group_recipients.append(recipient)
+                group_recipients.append(recipient)                
                 [new_recipients.append(user_id)
-                 for user_id in group.getGroupMemberIds()]
-
+                 for user_id in _getGroupMemberIds(group)]
+        
         for recipient in group_recipients:
             recipients.remove(recipient)
 
@@ -162,7 +173,7 @@ action or enter an email in the portal properties")
         subject = subject.replace("${title}", event_title)
 
         for recipient in recipients_mail:
-            mailhost.secureSend(message, recipient, source,
+            mailhost.secureSend(message.encode(email_charset), recipient, source,
                                 subject=subject, subtype='plain',
                                 charset=email_charset, debug=False)
         return True

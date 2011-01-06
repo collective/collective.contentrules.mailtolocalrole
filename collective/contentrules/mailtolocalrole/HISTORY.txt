@@ -1,4 +1,4 @@
-1.1 (unreleased)
+1.1 (2011-01-07)
 ----------------
 
 - Fix the email from header that is generated from the portal owner if no from

@@ -32,16 +32,21 @@ class IMailLocalRoleAction(Interface):
 email. If no email is provided here, it will use the portal from address."),
         required=False)
     localrole = schema.Choice(
-        title=_(u"Local Role"),
-        description=_("Select a local role. \
+        title=_(u"Role"),
+        description=_("Select a role. \
 The action will look up the all Plone site users who explicitly have this \
-local role on the object and send a message to their email address."),
+role on the object and send a message to their email address."),
         vocabulary="collective.contentrules.mailtolocalrole.local_roles",
         required=True)
     acquired = schema.Bool(
         title=_(u"Acquired Roles"),
         description=_("Should users that have this \
 role as an acquired role also receive this email?"),
+        required=False)
+    global_roles = schema.Bool(
+        title=_(u"Global Roles"),
+        description=_("Should users that have this \
+role as a role in the whole site also receive this email?"),
         required=False)
     message = schema.Text(
         title=_plone(u"Message"),
@@ -63,11 +68,12 @@ class MailLocalRoleAction(SimpleItem):
     localrole = u''
     message = u''
     acquired = False
+    global_roles = False
     element = 'plone.actions.MailLocalRole'
 
     @property
     def summary(self):
-        return _((u"Email report to users with local role ${localrole} on "
+        return _((u"Email report to users with role ${localrole} on "
                   u"the object"),
                  mapping=dict(localrole=self.localrole))
 
@@ -129,6 +135,14 @@ action or enter an email in the portal properties")
                               if self.element.localrole in r[1]]
             recipients.update(acquired_users)
 
+        # check for the global roles
+        if self.element.global_roles:
+            pas = getToolByName(self.event.object, 'acl_users')
+            rolemanager = pas.portal_role_manager
+            global_role_ids = [ p[0] for p in \
+                rolemanager.listAssignedPrincipals(self.element.localrole) ]
+            recipients.update(global_role_ids)
+
         # check to see if the recipents are users or groups
         group_recipients = []
         new_recipients = []
@@ -186,7 +200,7 @@ class MailLocalRoleAddForm(AddForm):
     form_fields = form.FormFields(IMailLocalRoleAction)
     label = _plone(u"Add Mail Action")
     description = _plone(u"A mail action that can mail plone users who have "
-                         u"a local role on the object")
+                         u"a role on the object")
     form_name = _plone(u"Configure element")
 
     def create(self, data):
@@ -200,7 +214,7 @@ class MailLocalRoleEditForm(EditForm):
     An edit form for the mail action
     """
     form_fields = form.FormFields(IMailLocalRoleAction)
-    label = _plone(u"Edit Mail Local Role Action")
+    label = _plone(u"Edit Mail Role Action")
     description = _plone(u"A mail action that can mail plone users who have "
-                         u"a local role on the object")
+                         u"a role on the object")
     form_name = _plone(u"Configure element")

@@ -5,6 +5,9 @@
 - Plone 4.1 compatibility (fixes
   http://plone.org/products/collective-contentrules-mailtolocalrole/issues/5)
   [khink]
+- Add checkbox for including members with global roles in mail (fixes
+  http://plone.org/products/collective-contentrules-mailtolocalrole/issues/4)
+  [khink]
 
 1.1 (2011-01-07)
 ----------------

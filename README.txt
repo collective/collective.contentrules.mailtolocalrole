@@ -22,9 +22,10 @@ Installation
 ============
 
 Add collective.contentrules.mailtolocalrole to your buildout as an egg or
-from source. No (generic setup) installation is necessary, the action is 
-registered using ZCML. So do add the package to the zcml slug list of your
-[instance] section.
+from source. No (generic setup) installation is necessary.
+
+    Versions before 1.2 did not use the z3c.autoinclude plugin, so you would
+    need to add the package to the zcml slug list of your [instance] section.
 
 Usage
 =====

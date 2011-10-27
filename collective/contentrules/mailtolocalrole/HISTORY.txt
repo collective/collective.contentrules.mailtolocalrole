@@ -1,7 +1,7 @@
 1.2 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- use z3c.autoinclude plugin
 
 
 1.1 (2011-01-07)

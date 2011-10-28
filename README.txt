@@ -18,6 +18,11 @@ Before contentrules was available in Plone 3 the place to add this functionality
 was to to create a python script and attach it to the workflow 'submit' 
 transition that was used for the objects.
 
+.. Note::
+   This product will be superceded by `collective.contentrules.mailtorole`, 
+   which can send mail to all members having a role on the object, including 
+   global roles.
+
 Installation
 ============
 

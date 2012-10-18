@@ -1,4 +1,4 @@
-1.3 (unreleased)
+1.3 (2012-10-18)
 ----------------
 
 - Officially superceded by collective.contentrules.mailtorole.

@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2008-10-02 10:46+0000\n"
+"POT-Creation-Date: 2014-10-20 20:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,23 +17,23 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: collective.contentrules.mailtolocalrole\n"
 
-#: ./actions/mail.py:37
+#: ./actions/mail.py:45
 msgid "Acquired Roles"
 msgstr ""
 
-#: ./actions/mail.py:63
+#: ./actions/mail.py:70
 msgid "Email report to users with local role ${localrole} on the object"
 msgstr ""
 
-#: ./actions/mail.py:31
+#: ./actions/mail.py:38
 msgid "Local Role"
 msgstr ""
 
-#: ./actions/mail.py:32
+#: ./actions/mail.py:39
 msgid "Select a local role. The action will look up the all Plone site users who explicitly have this local role on the object and send a message to their email address."
 msgstr ""
 
-#: ./actions/mail.py:38
+#: ./actions/mail.py:46
 msgid "Should users that have this role as an acquired role also receive this email?"
 msgstr ""
 

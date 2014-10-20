@@ -12,6 +12,9 @@ from plone.contentrules.rule.interfaces import IRuleElementData, IExecutable
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.utils import safe_unicode
 
+from plone.stringinterp.interfaces import IStringInterpolator
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+
 # import the default messagefactory as _plone. These strings will not be put in
 # the locales .po file by i18ndude
 from Products.CMFPlone import PloneMessageFactory as _plone
@@ -45,10 +48,7 @@ role as an acquired role also receive this email?"),
         required=False)
     message = schema.Text(
         title=_plone(u"Message"),
-        description=_plone(u"Type in here the message that you \
-want to mail. Some defined content can be replaced: ${title} will be replaced \
-by the title of the newly created item. ${url} will be replaced by the \
-URL of the newly created item."),
+        description=_plone(u"Type in here the message that you want to mail."),
         required=True)
 
 
@@ -108,6 +108,11 @@ action or enter an email in the portal properties")
         obj = self.event.object
         event_title = safe_unicode(obj.Title())
         event_url = obj.absolute_url()
+        
+        interpolator = IStringInterpolator(obj)
+        
+        if source:
+            source = interpolator(source).strip()
 
         # search through all local roles on the object, and add
         # users's email to the recipients list if they have the local
@@ -166,11 +171,11 @@ action or enter an email in the portal properties")
             if recipient_prop != None and len(recipient_prop) > 0:
                 recipients_mail.add(recipient_prop)
 
-        message = self.element.message.replace("${url}", event_url)
-        message = message.replace("${title}", event_title)
+        # prepend interpolated message with \n to avoid interpretation
+        # of first line as header
+        message = "\n%s" % interpolator(self.element.message)
 
-        subject = self.element.subject.replace("${url}", event_url)
-        subject = subject.replace("${title}", event_title)
+        subject = interpolator(self.element.subject)
 
         for recipient in recipients_mail:
             mailhost.secureSend(message.encode(email_charset), recipient, source,

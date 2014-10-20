@@ -193,6 +193,9 @@ class MailLocalRoleAddForm(AddForm):
     description = _plone(u"A mail action that can mail plone users who have "
                          u"a local role on the object")
     form_name = _plone(u"Configure element")
+    
+    #custom template will allow us to list substitutions
+    template = ViewPageTemplateFile('mail.pt')
 
     def create(self, data):
         a = MailLocalRoleAction()
@@ -209,3 +212,6 @@ class MailLocalRoleEditForm(EditForm):
     description = _plone(u"A mail action that can mail plone users who have "
                          u"a local role on the object")
     form_name = _plone(u"Configure element")
+
+    #custom template will allow us to list substitutions
+    template = ViewPageTemplateFile('mail.pt')
